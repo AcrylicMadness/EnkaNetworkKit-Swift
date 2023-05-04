@@ -5,16 +5,14 @@ import FoundationNetworking
 
 extension URLSession {
     func object<T: Codable>(from url: URL, withType type: T.Type) async throws -> T {
-        let (data, _) = try await data(from: url)
+        let (responseData, _) = try await self.data(from: url)
         let decoder = JSONDecoder() 
-        return try decoder.decode(T.self, from: data)
+        return try decoder.decode(T.self, from: responseData)
     }
     
     func object<T: Codable>(for request: URLRequest, withType type: T.Type) async throws -> T {
-        let (data, _) = try await data(for: request)
-        print(request.url?.absoluteString ?? "")
-        print(String(data: data, encoding: .utf8) ?? "")
+        let (responseData, _) = try await self.data(for: request)
         let decoder = JSONDecoder()
-        return try decoder.decode(T.self, from: data)
+        return try decoder.decode(T.self, from: responseData)
     }
 }
