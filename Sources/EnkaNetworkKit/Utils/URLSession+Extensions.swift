@@ -20,6 +20,11 @@ extension URLSession {
 
 #else
 
+/// Defines the possible errors
+public enum URLSessionAsyncErrors: Error {
+    case invalidUrlResponse, missingResponseData
+}
+
 public extension URLSession {
     
     /// A reimplementation of `URLSession.shared.data(from: url)` required for Linux
