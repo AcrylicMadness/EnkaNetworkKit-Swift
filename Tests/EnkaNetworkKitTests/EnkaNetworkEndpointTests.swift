@@ -9,6 +9,6 @@ final class EnkaNetworkEndpointTests: XCTestCase {
         
         let endpoint = EnkaNetworkEndpoint.uid(uid: "123", onlyInfo: true)
         
-        XCTAssertEqual(url.appending(paths: endpoint.endpointPathComponents).appending(queryItems: endpoint.enpointQuery).absoluteString, "https://example.com/uid/123?info")
+        XCTAssertEqual(url.appending(paths: endpoint.endpointPathComponents).appending(query: endpoint.enpointQuery).absoluteString, "https://example.com/uid/123?info")
     }
 }

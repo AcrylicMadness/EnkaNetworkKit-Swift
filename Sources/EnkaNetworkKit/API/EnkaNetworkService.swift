@@ -44,10 +44,12 @@ class EnkaNetworkService {
             let url = enkaUrl.appending(paths: endpoint.endpointPathComponents).appending(queryItems: endpoint.enpointQuery)
             request = URLRequest(url: url)
         } else {
-            request = createRequest(endpoint: endpoint)
+            let url = enkaUrl.appending(paths: endpoint.endpointPathComponents).appending(query: endpoint.enpointQuery)
+            request = URLRequest(url: url)
         }
         #else
-        request = createRequest(endpoint: endpoint)
+        let url = enkaUrl.appending(paths: endpoint.endpointPathComponents).appending(query: endpoint.enpointQuery)
+        request = URLRequest(url: url)
         #endif
         
         if let userAgent = userAgent {
@@ -57,12 +59,5 @@ class EnkaNetworkService {
         }
         
         return request
-    }
-    
-    private func createRequest(endpoint: EnkaNetworkEndpoint) -> URLRequest {
-        var urlComps = URLComponents(string: enkaUrl.appending(paths: endpoint.endpointPathComponents).absoluteString)!
-        urlComps.queryItems = endpoint.enpointQuery
-        let url = urlComps.url!
-        return URLRequest(url: url)
     }
 }

@@ -11,4 +11,11 @@ extension URL {
         }
         return url
     }
+    
+    func appending(query: [URLQueryItem]) -> URL {
+        var urlComps = URLComponents(string: absoluteString)!
+        urlComps.queryItems = query
+        let url = urlComps.url!
+        return url
+    }
 }
