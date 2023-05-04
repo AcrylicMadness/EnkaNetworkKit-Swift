@@ -1,11 +1,12 @@
 import Foundation
 
 public struct PlayerInfo: Codable {
-    let nickname: String
-    let signature: String
-    let worldLevel: Int
-    let nameCardId: Int
-    let finishAchievementNum: Int
-    let towerFloorIndex: Int
-    let towerLevelIndex: Int
+    public let nickname: String
+    public let signature: String
+    public let worldLevel: Int
+    public let level: Int
+    public let nameCardId: Int
+    public let finishAchievementNum: Int
+    public let towerFloorIndex: Int
+    public let towerLevelIndex: Int
 }
