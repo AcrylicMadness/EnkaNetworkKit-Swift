@@ -8,8 +8,9 @@
 
 | Platform | Version |
 | ------ | ------ |
-| iOS | >= 15.0 |
-| tvOS | >= 15.0 |
-| watchOS | >= 8.0 |
-| macOS (Catalyst) | >= 15.0 |
-| macOS (Native) | >= 13.0 |
+| iOS | 15.0+ |
+| tvOS | 15.0+ |
+| watchOS | 8.0+ |
+| macOS (Catalyst) | 15.0+ |
+| macOS (Native) | 13.0+ |
+| Linux | Swift 5.8+ |
