@@ -10,17 +10,39 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    name: Swift on ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-13, ubuntu-latest, windows-latest]
-        
-    runs-on: ${{ matrix.os }}
+  mac:
+    name: EnkaNetworkKit-Swift on MacOS 13     
+    runs-on: macos-13
 
     steps:
     - uses: swift-actions/setup-swift@v1
+    - uses: actions/checkout@v3
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
+  linux:
+    name: EnkaNetworkKit-Swift on Ubuntu-Latest
+        
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: swift-actions/setup-swift@v1
+    - uses: actions/checkout@v3
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
+  windows:
+    name: EnkaNetwork on Windows
+        
+    runs-on: windows-latest
+
+    steps:
+    - uses: compnerd/gha-setup-swift@main
+      with:
+        branch: main
+        tag: swift-5.8-RELEASE
     - uses: actions/checkout@v3
     - name: Build
       run: swift build -v
