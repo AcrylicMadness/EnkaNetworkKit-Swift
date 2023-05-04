@@ -11,7 +11,7 @@ on:
 
 jobs:
   mac:
-    name: EnkaNetworkKit-Swift on MacOS 13     
+    name: Tests on MacOS-13
     runs-on: macos-13
 
     steps:
@@ -22,7 +22,7 @@ jobs:
     - name: Run tests
       run: swift test -v
   linux:
-    name: EnkaNetworkKit-Swift on Ubuntu-Latest
+    name: Tests on Ubuntu-Latest
         
     runs-on: ubuntu-latest
 
@@ -34,7 +34,7 @@ jobs:
     - name: Run tests
       run: swift test -v
   windows:
-    name: EnkaNetwork on Windows
+    name: Tests on Windows-Latest
         
     runs-on: windows-latest
 

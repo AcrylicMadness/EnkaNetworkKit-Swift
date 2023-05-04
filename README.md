@@ -4,7 +4,7 @@
 
 [Enka.Network](https://enka.network) API wrapper for Swift. Pretty much work in progress as of now.
 
-### Supported Platforms
+### Supported Platform Versions
 
 | Platform | Version |
 | ------ | ------ |
@@ -14,3 +14,4 @@
 | macOS (Catalyst) | 15.0+ |
 | macOS (Native) | 13.0+ |
 | Linux | Swift 5.8+ |
+| Windows | Swift 5.8+ |
