@@ -1,4 +1,4 @@
-![Logo](https://user-images.githubusercontent.com/5305147/236259910-5670ebc1-31af-4ddc-a5e7-521f9ceff54c.png)
+![Logo](https://user-images.githubusercontent.com/5305147/236318333-c59e4007-19d0-4e99-8b87-53d2d40dbe46.png)
 
 # Enka.Network Kit for Swift
 
