@@ -15,7 +15,7 @@ public enum EnkaLanguage: String {
     /// português
     case pt
     /// 한국어
-    case kr
+    case ko
     /// 日本語
     case jp
     /// 中文
