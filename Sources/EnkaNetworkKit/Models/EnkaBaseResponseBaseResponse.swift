@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct BaseResponse: Codable {
-    let playerInfo: PlayerInfo
+struct EnkaBaseResponse: Codable {
+    let playerInfo: EnkaPlayerInfo
 }

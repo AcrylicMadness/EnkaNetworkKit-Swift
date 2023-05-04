@@ -37,7 +37,11 @@ public final class EnkaClient {
     }
     
     // MARK: - Async Methods
-    public func playerInfo(forUid uid: String) async throws -> PlayerInfo {
+    
+    /// Loads basic player info using player uid
+    /// - Parameter uid: Player's UID
+    /// - Returns: Basic player info
+    public func playerInfo(forUid uid: String) async throws -> EnkaPlayerInfo {
         try await service.loadPlayerInfo(withUid: uid)
     }
     

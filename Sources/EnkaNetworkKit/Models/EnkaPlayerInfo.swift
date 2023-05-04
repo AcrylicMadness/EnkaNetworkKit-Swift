@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PlayerInfo: Codable {
+public struct EnkaPlayerInfo: Codable {
     public let nickname: String
     public let signature: String
     public let worldLevel: Int
