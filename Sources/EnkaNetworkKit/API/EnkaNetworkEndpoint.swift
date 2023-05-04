@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 enum EnkaNetworkEndpoint {
     case uid(uid: String, onlyInfo: Bool)

@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 extension URLSession {
     func object<T: Codable>(from url: URL, withType type: T.Type) async throws -> T {
