@@ -7,13 +7,21 @@ enum EnkaNetworkEndpoint {
 extension EnkaNetworkEndpoint {
     var endpointPathComponents: [String] {
         switch self {
-        case .uid(let uid, let onlyInfo):
+        case .uid(let uid, _):
             var pathComponents: [String] = ["uid"]
             pathComponents.append(uid)
-            if onlyInfo {
-                pathComponents.append("?info")
-            }
             return pathComponents
+        }
+    }
+    
+    var enpointQuery: [URLQueryItem] {
+        switch self {
+        case .uid(_, let onlyInfo):
+            if onlyInfo {
+                return [URLQueryItem(name: "info", value: nil)]
+            } else {
+                return []
+            }
         }
     }
 }
