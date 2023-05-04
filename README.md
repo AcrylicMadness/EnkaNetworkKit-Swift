@@ -2,7 +2,7 @@
 
 # Enka.Network Kit for Swift
 
-Enka.Network API wrapper for Swift. Pretty much work in progress as of now.
+[Enka.Network](https://enka.network) API wrapper for Swift. Pretty much work in progress as of now.
 
 ### Supported Platforms
 
