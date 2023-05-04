@@ -28,8 +28,18 @@ class EnkaNetworkService {
     // MARK: - Private Methods
 
     private func request(forEndpoint endpoint: EnkaNetworkEndpoint) -> URLRequest {
-        let url: URL = enkaUrl.appending(paths: endpoint.endpointPathComponents).appending(queryItems: endpoint.enpointQuery)
-        var request: URLRequest = URLRequest(url: url)
+        
+        var request: URLRequest
+        
+        if #available(iOS 16, *) {
+            let url = enkaUrl.appending(paths: endpoint.endpointPathComponents).appending(queryItems: endpoint.enpointQuery)
+            request = URLRequest(url: url)
+        } else {
+            var urlComps = URLComponents(string: enkaUrl.appending(paths: endpoint.endpointPathComponents).absoluteString)!
+            urlComps.queryItems = endpoint.enpointQuery
+            let url = urlComps.url!
+            request = URLRequest(url: url)
+        }
         
         if let userAgent = userAgent {
             request.setValue("\(userAgent) \(enkaNetworkKitAgent)", forHTTPHeaderField: "User-Agent")
