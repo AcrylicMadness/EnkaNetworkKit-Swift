@@ -13,6 +13,7 @@ public final class EnkaClient {
     
     // MARK: - Private Properties
     
+    /// Service for network requests
     private lazy var service: EnkaNetworkService = EnkaNetworkService(userAgent: userAgent)
     
     // MARK: - Initialization
@@ -44,7 +45,6 @@ public final class EnkaClient {
         
     }
     
-    // MARK: - Completion Handler Methods
 }
 
 //

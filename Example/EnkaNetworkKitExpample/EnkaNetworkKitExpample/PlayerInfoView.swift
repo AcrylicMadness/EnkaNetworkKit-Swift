@@ -12,9 +12,10 @@ struct PlayerInfoView: View {
     
     @State var uid: String = "618285856"
     @State var playerData: [PlayerData] = []
+    @State var isLoading: Bool = false
         
     let enkaClient: EnkaClient = EnkaClient(defaultLanguage: .en, userAgent: "EnkaExample/1.0.0")
-    
+
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
@@ -48,13 +49,20 @@ struct PlayerInfoView: View {
                 
                 TextField("UID", text: $uid)
                 
-                Button {
-                    loadPlayerData()
-                } label: {
-                    Text("Load")
+                if isLoading {
+                    ProgressView()
+                        .controlSize(.small)
                         .padding(.horizontal)
+                } else {
+                    Button {
+                        loadPlayerData()
+                    } label: {
+                        Text("Load")
+                            .padding(.horizontal)
+                    }
+                    .keyboardShortcut(.defaultAction)
                 }
-                .keyboardShortcut(.defaultAction)
+               
             }
             .padding()
             .navigationTitle("PlayerData")
@@ -62,16 +70,20 @@ struct PlayerInfoView: View {
     }
     
     func loadPlayerData() {
+        
+        isLoading = true
+        
         Task {
             do {
                 let playerInfo = try await enkaClient.playerInfo(forUid: uid)
                 DispatchQueue.main.async {
-                    playerData.append(PlayerData(key: "Nickname", value: playerInfo.nickname))
-                    playerData.append(PlayerData(key: "Signature", value: playerInfo.signature))
-                    playerData.append(PlayerData(key: "Adventure Rank", value: "\(playerInfo.level)"))
-                    playerData.append(PlayerData(key: "World level", value: "\(playerInfo.worldLevel)"))
-                    playerData.append(PlayerData(key: "Completed achievments", value: "\(playerInfo.finishAchievementNum)"))
-                    playerData.append(PlayerData(key: "Abyss", value: "\(playerInfo.towerFloorIndex)-\(playerInfo.towerLevelIndex)"))
+                        isLoading = false
+                        playerData.append(PlayerData(key: "Nickname", value: playerInfo.nickname))
+                        playerData.append(PlayerData(key: "Signature", value: playerInfo.signature))
+                        playerData.append(PlayerData(key: "Adventure Rank", value: "\(playerInfo.level)"))
+                        playerData.append(PlayerData(key: "World level", value: "\(playerInfo.worldLevel)"))
+                        playerData.append(PlayerData(key: "Completed achievments", value: "\(playerInfo.finishAchievementNum)"))
+                        playerData.append(PlayerData(key: "Abyss", value: "\(playerInfo.towerFloorIndex)-\(playerInfo.towerLevelIndex)"))
                 }
             } catch {
                 print(error)
