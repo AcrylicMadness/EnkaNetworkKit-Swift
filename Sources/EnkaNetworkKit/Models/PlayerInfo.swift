@@ -8,6 +8,4 @@ public struct PlayerInfo: Codable {
     let finishAchievementNum: Int
     let towerFloorIndex: Int
     let towerLevelIndex: Int
-    let ttl: Int
-    let uid: String
 }

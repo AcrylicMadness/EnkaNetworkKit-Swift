@@ -3,7 +3,6 @@ import XCTest
 
 final class EnkaNetworkServiceTests: XCTestCase {
     
-    
     let uid: String = "720522638"
     
     func testRequest() async throws {
