@@ -5,7 +5,6 @@ import FoundationNetworking
 
 enum EnkaNetworkEndpoint {
     case uid(uid: String, onlyInfo: Bool)
-//    case 
 }
 
 extension EnkaNetworkEndpoint {
