@@ -27,7 +27,7 @@ public enum URLSessionAsyncErrors: Error {
 
 public extension URLSession {
     
-    /// A reimplementation of `URLSession.shared.data(from: url)` required for Linux
+    /// A reimplementation of `URLSession.shared.data(from: url)` required for Linux & Windows
     ///
     /// - Parameter url: The URL for which to load data.
     /// - Returns: Data and response.
@@ -56,7 +56,7 @@ public extension URLSession {
         }
     }
     
-    /// A reimplementation of `URLSession.shared.data(for: request)` required for Linux
+    /// A reimplementation of `URLSession.shared.data(for: request)` required for Linux & Windows
     ///
     /// - Parameter request: Request for which to load data.
     /// - Returns: Data and response.

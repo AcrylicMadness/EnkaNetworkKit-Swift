@@ -3,7 +3,7 @@ import Foundation
 import FoundationNetworking
 #endif
 
-class EnkaNetworkService {
+class EnkaAPIService {
     
     // MARK: - Internal Properties
     
@@ -14,7 +14,7 @@ class EnkaNetworkService {
     private let enkaUrl: URL = URL(string: "https://enka.network/api/")!
     private let enkaNetworkKitAgent: String = "EnkaNetworkKit-Swift/0.1.0"
     private lazy var session: URLSession = URLSession(configuration: .default)
-    private lazy var cacheService: EnkaCacheService = EnkaCacheService(session: session)
+    private lazy var cacheService: EnkaCacheService = EnkaCacheService()
     
     // MARK: - Initializtion
     
@@ -27,10 +27,6 @@ class EnkaNetworkService {
     func loadPlayerInfo(withUid uid: String) async throws -> EnkaPlayerInfo {
         let endpoint: EnkaNetworkEndpoint = .uid(uid: uid, onlyInfo: true)
         return try await session.object(for: request(forEndpoint: endpoint), withType: EnkaBaseResponse.self).playerInfo
-    }
-    
-    func downloadCache() {
-        
     }
     
     // MARK: - Private Methods

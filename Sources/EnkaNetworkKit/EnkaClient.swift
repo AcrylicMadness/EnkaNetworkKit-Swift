@@ -14,7 +14,7 @@ public final class EnkaClient {
     // MARK: - Private Properties
     
     /// Service for network requests
-    private lazy var service: EnkaNetworkService = EnkaNetworkService(userAgent: userAgent)
+    private lazy var service: EnkaAPIService = EnkaAPIService(userAgent: userAgent)
     
     // MARK: - Initialization
     
@@ -44,11 +44,6 @@ public final class EnkaClient {
     public func playerInfo(forUid uid: String) async throws -> EnkaPlayerInfo {
         try await service.loadPlayerInfo(withUid: uid)
     }
-    
-    public func playerInfo(forUsername: String) {
-        
-    }
-    
 }
 
 //
