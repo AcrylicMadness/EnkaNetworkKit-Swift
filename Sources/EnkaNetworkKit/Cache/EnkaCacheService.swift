@@ -113,11 +113,7 @@ class EnkaCacheService {
     /// So this method is called only after any changes to the cached data were made.
     /// - Returns: Cache size in bytes
     private func evaluateCacheSize() -> Int {
-        let size = try? fileManager.allocatedSizeOfDirectory(at: documentsDirectory.appendingPathComponent(permanentDirectoryName))
-        if let size = size {
-            return Int(size)
-        } else {
-            return 0
-        }
+        let attributes = URLFileAttribute(url: documentsDirectory.appendingPathComponent(permanentDirectoryName))
+        return Int(attributes.fileSize ?? 0)
     }
 }

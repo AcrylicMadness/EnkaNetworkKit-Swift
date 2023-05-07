@@ -84,12 +84,12 @@ final class EnkaCacheServiceTests: XCTestCase {
         }
     }
     
-//    func testCacheSize() throws {
-//        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
-//        try service.cache(object: testItem)
-//        print("Cache size: \(service.cacheSize)")
-//        XCTAssertTrue(service.cacheSize != 0)
-//    }
+    func testCacheSize() throws {
+        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        print("Cache size: \(service.cacheSize)")
+        XCTAssertTrue(service.cacheSize != 0)
+    }
 
     func checkIfFileExists(directory: String, filename: String) -> Bool {
         let fileUrl = documentsDirectory.appendingPathComponent(directory).appendingPathComponent(filename)
