@@ -15,9 +15,12 @@ extension PermanentTestCachable: EnkaCachable {
     }
 }
 
-final class EnkaCacheTests: XCTestCase {
+final class EnkaCacheServiceTests: XCTestCase {
     
-    let service: EnkaCacheService = EnkaCacheService()
+    let directoryName: String = "EnkaNetworkKit-Tests-Cache"
+    let permanentTestProperty: String = "Hello, Enka!"
+    
+    lazy var service: EnkaCacheService = EnkaCacheService(permanentDirectoryName: directoryName)
     
     override func tearDownWithError() throws {
         try service.removeAllPermanentCache()
@@ -29,16 +32,23 @@ final class EnkaCacheTests: XCTestCase {
     }
 
     func testPermanentCacheSave() throws {
-        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: "Hello, Enka!")
+        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
-        XCTAssert(checkIfFileExists(directory: "EnkaNetworkKit-Cache", filename: "\(testItem.fileName).\(testItem.fileExtension)"))
+        XCTAssert(checkIfFileExists(directory: directoryName, filename: "\(testItem.fileName).\(testItem.fileExtension)"))
     }
     
     func testPermanentCacheRemoval() throws {
-        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: "Hello, Enka!")
+        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
         try service.removeAllPermanentCache()
-        XCTAssertFalse(checkIfDirectoryExists(directory: "EnkaNetworkKit-Cache"))
+        XCTAssertFalse(checkIfDirectoryExists(directory: directoryName))
+        XCTAssertTrue(service.cacheSize == 0)
+    }
+    
+    func testCacheSize() throws {
+        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        XCTAssertTrue(service.cacheSize != 0)
     }
 
     func checkIfFileExists(directory: String, filename: String) -> Bool {
