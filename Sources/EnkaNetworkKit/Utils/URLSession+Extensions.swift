@@ -7,6 +7,7 @@ import FoundationNetworking
 // directly from URLSession
 
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+
 extension URLSession {
     
     /// Requests the remote data and coverts it to provided type
@@ -31,6 +32,7 @@ extension URLSession {
         return try decoder.decode(T.self, from: responseData)
     }
 }
+
 #else
 
 // For whatever reason Swift on Linux and Windows is
@@ -125,4 +127,5 @@ public extension URLSession {
         return try decoder.decode(T.self, from: responseData)
     }
 }
+
 #endif
