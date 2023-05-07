@@ -11,8 +11,9 @@ public final class EnkaClient {
     /// for example "Enka-App/1.2.3". If nil, the default agent for EnkaNetworkKit will be used instead
     let userAgent: String?
     
-    /// Current cache size in bytes
-    var cacheSize: Int {
+    // TODO: Fix this propery on Windows and make it public
+    /// Current cache size in bytes.
+    private var cacheSize: Int {
         cacheService.cacheSize
     }
     
