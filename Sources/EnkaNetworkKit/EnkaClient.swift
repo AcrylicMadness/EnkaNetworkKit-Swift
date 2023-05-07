@@ -44,7 +44,14 @@ public final class EnkaClient {
         self.userAgent = userAgent
     }
     
-    // MARK: - Async Methods
+    // MARK: - Working With Cache
+    
+    /// Clears all permamently stored data and removes cache directory
+    public func clearPermanentCache() throws {
+        try cacheService.removeAllPermanentCache()
+    }
+    
+    // MARK: - Loading Data
     
     /// Loads basic player info using player uid
     /// - Parameter uid: Player's UID
