@@ -18,6 +18,12 @@ extension URLSession {
     }
 }
 #else
+
+// For whatever reason Swift on Linux and Windows is
+// still unable to access async methods data(from: ) and data(for: )
+// This is a workaround I hope one day will no longer be needed
+// https://medium.com/hoursofoperation/use-async-urlsession-with-server-side-swift-67821a64fa91
+
 /// Defines the possible errors
 public enum URLSessionAsyncErrors: Error {
     case invalidUrlResponse, missingResponseData

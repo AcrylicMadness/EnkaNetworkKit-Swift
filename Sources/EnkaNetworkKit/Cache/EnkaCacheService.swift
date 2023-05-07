@@ -7,11 +7,26 @@ class EnkaCacheService {
     
     let permanentDirectoryName: String
     
+    var cacheSize: Int {
+        let size = try? fileManager.allocatedSizeOfDirectory(at: documentsDirectory.appendingPathComponent(permanentDirectoryName))
+        if let size = size {
+            return Int(size)
+        } else {
+            return 0
+        }
+    }
+    
     private lazy var fileManager: FileManager = FileManager()
     
     private var documentsDirectory: URL {
         let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
         return paths[0]
+    }
+    
+    private var cacheDirextoryExists: Bool {
+        let fileUrl = documentsDirectory.appendingPathComponent(permanentDirectoryName)
+        var isDirectory: ObjCBool = true
+        return fileManager.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory)
     }
     
     init(permanentDirectoryName: String = "EnkaNetworkKit-Cache") {
@@ -20,18 +35,9 @@ class EnkaCacheService {
     
     func cache(object: EnkaCachable) throws {
         let storageType = object.storageType
-        let currentDate: Date = Date()
-        
         switch storageType {
         case .permanent(let expirationTime):
-            let expirationDate: Date = currentDate.addingTimeInterval(expirationTime ?? EnkaCacheStorageType.defaultPermanentExpirationTime)
-            let jsonData = try object.jsonData
-            guard var jsonString = String(data: jsonData, encoding: .utf8) else {
-                throw EnkaCacheError.unableToConvertCachableObjectToString
-            }
-            jsonString.insert(contentsOf: "\(expirationDate.timeIntervalSince1970)\n", at: jsonString.startIndex)
-            try setupCacheDirectory()
-            try write(string: jsonString, fileName: object.fileName, fileExtension: object.fileExtension)
+            try savePermanent(object: object, expirationTime: expirationTime)
         case .temporary(_):
             fatalError("Temporary cache not yet implement")
         case .none:
@@ -39,11 +45,27 @@ class EnkaCacheService {
         }
     }
     
+    func removeAllPermanentCache() throws {
+        if cacheDirextoryExists {
+            try fileManager.removeItem(at: documentsDirectory.appendingPathComponent(permanentDirectoryName))
+        }
+    }
+    
+    private func savePermanent(object: EnkaCachable, expirationTime: TimeInterval?) throws {
+        let currentDate: Date = Date()
+        let expirationDate: Date = currentDate.addingTimeInterval(expirationTime ?? EnkaCacheStorageType.defaultPermanentExpirationTime)
+        let jsonData = try object.jsonData
+        guard var jsonString = String(data: jsonData, encoding: .utf8) else {
+            throw EnkaCacheError.unableToConvertCachableObjectToString
+        }
+        jsonString.insert(contentsOf: "\(expirationDate.timeIntervalSince1970)\n", at: jsonString.startIndex)
+        try setupCacheDirectory()
+        try write(string: jsonString, fileName: object.fileName, fileExtension: object.fileExtension)
+    }
+    
     private func setupCacheDirectory() throws {
         let fileUrl = documentsDirectory.appendingPathComponent(permanentDirectoryName)
-        
-        var isDirectory: ObjCBool = true
-        if !fileManager.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory) {
+        if !cacheDirextoryExists {
             try fileManager.createDirectory(at: fileUrl, withIntermediateDirectories: false)
         }
     }
@@ -52,6 +74,4 @@ class EnkaCacheService {
         let fileUrl: URL = documentsDirectory.appendingPathComponent(permanentDirectoryName).appendingPathComponent("\(fileName).\(fileExtension)")
         try string.write(to: fileUrl, atomically: true, encoding: .utf8)
     }
-    
-    
 }
