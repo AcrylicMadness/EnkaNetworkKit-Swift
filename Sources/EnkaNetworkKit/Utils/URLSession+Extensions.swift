@@ -3,14 +3,28 @@ import Foundation
 import FoundationNetworking
 #endif
 
+// Some basic shortcuts to load and parse Codable objectcts
+// directly from URLSession
+
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 extension URLSession {
+    
+    /// Requests the remote data and coverts it to provided type
+    /// - Parameters:
+    ///   - url: URL of remote resource
+    ///   - type: Cobable type of the resource
+    /// - Returns: Parsed object
     func object<T: Codable>(from url: URL, withType type: T.Type) async throws -> T {
         let (responseData, _) = try await self.data(from: url)
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: responseData)
     }
     
+    /// Requests the remote data and coverts it to provided type
+    /// - Parameters:
+    ///   - request: URLRequest to get the remote data
+    ///   - type: Cobable type of the resource
+    /// - Returns: Parsed object
     func object<T: Codable>(for request: URLRequest, withType type: T.Type) async throws -> T {
         let (responseData, _) = try await self.data(for: request)
         let decoder = JSONDecoder()
@@ -89,12 +103,22 @@ public extension URLSession {
         }
     }
     
+    /// Requests the remote data and coverts it to provided type
+    /// - Parameters:
+    ///   - url: URL of remote resource
+    ///   - type: Cobable type of the resource
+    /// - Returns: Parsed object
     func object<T: Codable>(from url: URL, withType type: T.Type) async throws -> T {
         let (responseData, _) = try await self.asyncData(from: url)
         let decoder = JSONDecoder()
         return try decoder.decode(T.self, from: responseData)
     }
     
+    /// Requests the remote data and coverts it to provided type
+    /// - Parameters:
+    ///   - request: URLRequest to get the remote data
+    ///   - type: Cobable type of the resource
+    /// - Returns: Parsed object
     func object<T: Codable>(for request: URLRequest, withType type: T.Type) async throws -> T {
         let (responseData, _) = try await self.asyncData(for: request)
         let decoder = JSONDecoder()
