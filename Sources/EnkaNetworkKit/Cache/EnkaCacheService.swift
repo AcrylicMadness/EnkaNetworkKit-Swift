@@ -29,7 +29,7 @@ class EnkaCacheService {
     }
     
     func cache(object: EnkaCachable) throws {
-        let storageType = object.storageType
+        let storageType = type(of: object).storageType
         switch storageType {
         case .permanent(let expirationTime):
             try savePermanent(object: object, expirationTime: expirationTime)
@@ -64,7 +64,35 @@ class EnkaCacheService {
         }
         jsonString.insert(contentsOf: "\(expirationDate.timeIntervalSince1970)\n", at: jsonString.startIndex)
         try setupCacheDirectory()
-        try write(string: jsonString, fileName: object.fileName, fileExtension: object.fileExtension)
+        try write(string: jsonString, fileName: type(of: object).fileName, fileExtension: type(of: object).fileExtension)
+    }
+    
+    func loadPermanent<T: EnkaCachable>(object: T.Type) throws -> T {
+        let fileName: String = object.fileName
+        let fileExtension: String = object.fileExtension
+        
+        let fileContents = try String(contentsOf: documentsDirectory.appendingPathComponent(permanentDirectoryName).appendingPathComponent("\(fileName).\(fileExtension)"))
+        
+        let stringComponents = fileContents.split(separator: "\n")
+        
+        let expirationDateString = stringComponents[0]
+        let objectJsonString = stringComponents[1]
+        
+        if let interval = TimeInterval(expirationDateString) {
+            let expirationDate = Date(timeIntervalSince1970: interval)
+            if Date() > expirationDate {
+                throw EnkaCacheError.cachedObjectExpired
+            }
+            
+            if let data = objectJsonString.data(using: .utf8) {
+                return try T.from(jsonData: data)
+            } else {
+                throw EnkaCacheError.badCachedDataFormat
+            }
+        } else {
+            throw EnkaCacheError.badCachedDataFormat
+        }
+
     }
     
     private func setupCacheDirectory() throws {
@@ -82,7 +110,7 @@ class EnkaCacheService {
     /// Evaluates cache size.
     /// Since Swift's FileManager does not have any built-in methods to check directory size
     /// we have to manually crawl through all its contents. This proccess can be resource expensive at scale.
-    /// So this method is called only after any changes to the cached were made.
+    /// So this method is called only after any changes to the cached data were made.
     /// - Returns: Cache size in bytes
     private func evaluateCacheSize() -> Int {
         let size = try? fileManager.allocatedSizeOfDirectory(at: documentsDirectory.appendingPathComponent(permanentDirectoryName))

@@ -6,12 +6,26 @@ struct PermanentTestCachable {
 }
 
 extension PermanentTestCachable: EnkaCachable {
-    var fileName: String {
+    static var fileName: String {
         "permanent-cache-test"
     }
     
-    var storageType: EnkaCacheStorageType {
+    static var storageType: EnkaCacheStorageType {
         .permanent(expirationTime: nil)
+    }
+}
+
+struct ExpirablePermanentTestCachable {
+    let testProperty: String
+}
+
+extension ExpirablePermanentTestCachable: EnkaCachable {
+    static var fileName: String {
+        "expirable-permanent-cache-test"
+    }
+    
+    static var storageType: EnkaCacheStorageType {
+        .permanent(expirationTime: 20)
     }
 }
 
@@ -34,7 +48,7 @@ final class EnkaCacheServiceTests: XCTestCase {
     func testPermanentCacheSave() throws {
         let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
-        XCTAssert(checkIfFileExists(directory: directoryName, filename: "\(testItem.fileName).\(testItem.fileExtension)"))
+        XCTAssert(checkIfFileExists(directory: directoryName, filename: "\(type(of: testItem).fileName).\(type(of: testItem).fileExtension)"))
     }
     
     func testPermanentCacheRemoval() throws {
@@ -43,6 +57,32 @@ final class EnkaCacheServiceTests: XCTestCase {
         try service.removeAllPermanentCache()
         XCTAssertFalse(checkIfDirectoryExists(directory: directoryName))
         XCTAssertTrue(service.cacheSize == 0)
+    }
+    
+    func testCacheRead() throws {
+        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        let result = try service.loadPermanent(object: PermanentTestCachable.self)
+        XCTAssertTrue(result.testProperty == permanentTestProperty)
+    }
+    
+    func testCacheExpiration() throws {
+        let testItem: ExpirablePermanentTestCachable = ExpirablePermanentTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        let result = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
+        XCTAssertTrue(result.testProperty == permanentTestProperty)
+        
+        _ = XCTWaiter.wait(for: [expectation(description: "Wait for the cache to expire")], timeout: 25)
+        
+        do {
+            let newResult = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
+        } catch {
+            if let enkaError = error as? EnkaCacheError {
+                XCTAssertTrue(enkaError == .cachedObjectExpired)
+            } else {
+                XCTAssert(false)
+            }
+        }
     }
     
     func testCacheSize() throws {

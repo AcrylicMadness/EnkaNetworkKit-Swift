@@ -3,17 +3,17 @@ import Foundation
 /// Protocol for classes and structures that can be permanently cahced
 protocol EnkaCachable: Codable {
     
-    /// Filename for permanent storage
-    var fileName: String { get }
-    
-    /// File extension for permanent storage. 'json' by default
-    var fileExtension: String { get }
-    
     /// Computed property to get data representation of the object
     var jsonData: Data { get throws }
     
+    /// Filename for permanent storage
+    static var fileName: String { get }
+    
+    /// File extension for permanent storage. 'json' by default
+    static var fileExtension: String { get }
+    
     /// Defines storage type for the object
-    var storageType: EnkaCacheStorageType { get }
+    static var storageType: EnkaCacheStorageType { get }
     
     /// Shortcut to get Cacheble item from JSON Data
     /// - Parameter data: JSON Data
@@ -28,11 +28,11 @@ extension EnkaCachable {
         }
     }
     
-    var fileExtension: String {
+    static var fileExtension: String {
         "encache"
     }
     
-    var storageType: EnkaCacheStorageType {
+    static var storageType: EnkaCacheStorageType {
         .none
     }
     

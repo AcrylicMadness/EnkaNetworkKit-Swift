@@ -8,11 +8,12 @@ public struct EnkaCharacters {
 
 // MARK: - Cachable
 extension EnkaCharacters: EnkaCachable {
-    var fileName: String {
+    
+    static var fileName: String {
         "characters"
     }
     
-    var storageType: EnkaCacheStorageType {
+    static var storageType: EnkaCacheStorageType {
         .permanent(expirationTime: nil)
     }
 }
