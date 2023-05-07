@@ -72,9 +72,7 @@ final class EnkaCacheServiceTests: XCTestCase {
         let result = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
         XCTAssertTrue(result.testProperty == permanentTestProperty)
         
-        print("Waiting for the cache to expire")
         _ = XCTWaiter.wait(for: [expectation(description: "Wait for the cache to expire")], timeout: 25)
-        print("Cache expired. trying to read it again")
         do {
             _ = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
         } catch {
@@ -89,6 +87,7 @@ final class EnkaCacheServiceTests: XCTestCase {
     func testCacheSize() throws {
         let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
+        print("Cache sizew: \(service.cacheSize)")
         XCTAssertTrue(service.cacheSize != 0)
     }
 
