@@ -5,12 +5,11 @@ public enum EnkaCacheStorageType {
     
     static var defaultPermanentExpirationTime: TimeInterval = 86400
     static var defaultTemporaryExpirationTime: TimeInterval = 600
-    static var defaultDirectoryName: String = "EnkaNetworkKit-Cache"
     
     /// Permanent on-disk storage.
     /// Expiration time determines when the cache will be ivalidated, 24 hours by default.
     /// Directory name determines the subdirecoty for permanent storage, "EnkaNetworkKit-Cache" by default
-    case permanent(expirationTime: TimeInterval?, directoryName: String?)
+    case permanent(expirationTime: TimeInterval?)
     
     /// RAM-only cache.
     /// Expiration time determines when the cache will be ivalidated, 10 minutes by default.

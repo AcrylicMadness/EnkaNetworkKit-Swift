@@ -12,6 +12,9 @@ protocol EnkaCachable: Codable {
     /// Computed property to get data representation of the object
     var jsonData: Data { get throws }
     
+    /// Defines storage type for the object
+    var storageType: EnkaCacheStorageType { get }
+    
     /// Shortcut to get Cacheble item from JSON Data
     /// - Parameter data: JSON Data
     /// - Returns: Decoded item
@@ -23,6 +26,14 @@ extension EnkaCachable {
         get throws {
             try JSONEncoder().encode(self)
         }
+    }
+    
+    var fileExtension: String {
+        "encache"
+    }
+    
+    var storageType: EnkaCacheStorageType {
+        .none
     }
     
     static func from(jsonData data: Data) throws -> Self {

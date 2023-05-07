@@ -17,9 +17,7 @@ extension URLSession {
         return try decoder.decode(T.self, from: responseData)
     }
 }
-
 #else
-
 /// Defines the possible errors
 public enum URLSessionAsyncErrors: Error {
     case invalidUrlResponse, missingResponseData
@@ -97,5 +95,4 @@ public extension URLSession {
         return try decoder.decode(T.self, from: responseData)
     }
 }
-
 #endif

@@ -3,7 +3,7 @@ import Foundation
 typealias EnkaCharacterId = String
 
 public struct EnkaCharacters {
-    
+    let testProperty: String
 }
 
 // MARK: - Cachable
@@ -12,7 +12,7 @@ extension EnkaCharacters: EnkaCachable {
         "characters"
     }
     
-    var fileExtension: String {
-        "json"
+    var storageType: EnkaCacheStorageType {
+        .permanent(expirationTime: nil)
     }
 }
