@@ -66,30 +66,30 @@ final class EnkaCacheServiceTests: XCTestCase {
         XCTAssertTrue(result.testProperty == permanentTestProperty)
     }
     
-//    func testCacheExpiration() throws {
-//        let testItem: ExpirablePermanentTestCachable = ExpirablePermanentTestCachable(testProperty: permanentTestProperty)
-//        try service.cache(object: testItem)
-//        let result = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
-//        XCTAssertTrue(result.testProperty == permanentTestProperty)
-//
-//        _ = XCTWaiter.wait(for: [expectation(description: "Wait for the cache to expire")], timeout: 25)
-//        do {
-//            _ = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
-//        } catch {
-//            if let enkaError = error as? EnkaCacheError {
-//                XCTAssertTrue(enkaError == .cachedObjectExpired)
-//            } else {
-//                XCTAssert(false)
-//            }
-//        }
-//    }
-    
-    func testCacheSize() throws {
-        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
+    func testCacheExpiration() throws {
+        let testItem: ExpirablePermanentTestCachable = ExpirablePermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
-        print("Cache size: \(service.cacheSize)")
-        XCTAssertTrue(service.cacheSize != 0)
+        let result = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
+        XCTAssertTrue(result.testProperty == permanentTestProperty)
+
+        _ = XCTWaiter.wait(for: [expectation(description: "Wait for the cache to expire")], timeout: 25)
+        do {
+            _ = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
+        } catch {
+            if let enkaError = error as? EnkaCacheError {
+                XCTAssertTrue(enkaError == .cachedObjectExpired)
+            } else {
+                XCTAssert(false)
+            }
+        }
     }
+    
+//    func testCacheSize() throws {
+//        let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
+//        try service.cache(object: testItem)
+//        print("Cache size: \(service.cacheSize)")
+//        XCTAssertTrue(service.cacheSize != 0)
+//    }
 
     func checkIfFileExists(directory: String, filename: String) -> Bool {
         let fileUrl = documentsDirectory.appendingPathComponent(directory).appendingPathComponent(filename)
