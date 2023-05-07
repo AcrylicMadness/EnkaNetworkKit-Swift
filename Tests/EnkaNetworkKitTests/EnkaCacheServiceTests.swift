@@ -72,10 +72,11 @@ final class EnkaCacheServiceTests: XCTestCase {
         let result = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
         XCTAssertTrue(result.testProperty == permanentTestProperty)
         
+        print("Waiting for the cache to expire")
         _ = XCTWaiter.wait(for: [expectation(description: "Wait for the cache to expire")], timeout: 25)
-        
+        print("Cache expired. trying to read it again")
         do {
-            let newResult = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
+            _ = try service.loadPermanent(object: ExpirablePermanentTestCachable.self)
         } catch {
             if let enkaError = error as? EnkaCacheError {
                 XCTAssertTrue(enkaError == .cachedObjectExpired)
