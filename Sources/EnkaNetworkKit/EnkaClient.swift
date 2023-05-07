@@ -11,9 +11,10 @@ public final class EnkaClient {
     /// for example "Enka-App/1.2.3". If nil, the default agent for EnkaNetworkKit will be used instead
     let userAgent: String?
     
-    // TODO: Fix this propery on Windows and make it public
     /// Current cache size in bytes.
-    private var cacheSize: Int {
+    /// For whatever reason file attributes in Swift don't work correctly on Windows.
+    /// So on Windows this property will always return 0
+    var cacheSize: Int {
         cacheService.cacheSize
     }
     
