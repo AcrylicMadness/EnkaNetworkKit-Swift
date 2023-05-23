@@ -29,6 +29,35 @@ extension ExpirablePermanentTestCachable: EnkaCachable {
     }
 }
 
+struct TemporaryTestCachable {
+    let testProperty: String
+}
+
+extension TemporaryTestCachable: EnkaCachable {
+    static var fileName: String {
+        "temporary-cache-test"
+    }
+    
+    static var storageType: EnkaCacheStorageType {
+        .temporary(expirationTime: nil)
+    }
+}
+
+struct ExpirableTemporaryTestCachable {
+    let testProperty: String
+}
+
+extension ExpirableTemporaryTestCachable: EnkaCachable {
+    static var fileName: String {
+        "expirable-temporary-cache-test"
+    }
+    
+    static var storageType: EnkaCacheStorageType {
+        .permanent(expirationTime: 20)
+    }
+}
+
+
 final class EnkaCacheServiceTests: XCTestCase {
     
     let directoryName: String = "EnkaNetworkKit-Tests-Cache"
@@ -84,10 +113,26 @@ final class EnkaCacheServiceTests: XCTestCase {
         }
     }
     
+    func testPermanentCachingInTemporary() throws {
+        // Permanently cached objects should also be available in temporary cache
+        let testItem: ExpirablePermanentTestCachable = ExpirablePermanentTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        let result = try service.loadTemporary(object: ExpirablePermanentTestCachable.self)
+        XCTAssertTrue(result.testProperty == permanentTestProperty)
+    }
+    
+    func testTemporaryCache() throws {
+        let testItem: TemporaryTestCachable = TemporaryTestCachable(testProperty: permanentTestProperty)
+        try service.cache(object: testItem)
+        let result = try service.loadTemporary(object: TemporaryTestCachable.self)
+        XCTAssertTrue(result.testProperty == permanentTestProperty)
+    }
+    
     func testCacheSize() throws {
         let testItem: PermanentTestCachable = PermanentTestCachable(testProperty: permanentTestProperty)
         try service.cache(object: testItem)
         #if os(Windows)
+        // Cache size doesn't work on Windows
         XCTAssert(true)
         #else
         XCTAssertTrue(service.cacheSize != 0)

@@ -5,16 +5,16 @@ public final class EnkaClient {
     // MARK: - Public Properies
     
     /// Language of the EnkaClient
-    let language: EnkaLanguage
+    public let language: EnkaLanguage
     
     /// User Agent string. Should include application name and version,
     /// for example "Enka-App/1.2.3". If nil, the default agent for EnkaNetworkKit will be used instead
-    let userAgent: String?
+    public let userAgent: String?
     
     /// Current cache size in bytes.
     /// For whatever reason file attributes in Swift don't work correctly on Windows.
     /// So on Windows this property will always return 0
-    var cacheSize: Int {
+    public var cacheSize: Int {
         cacheService.cacheSize
     }
     
@@ -51,7 +51,7 @@ public final class EnkaClient {
         try cacheService.removeAllPermanentCache()
     }
     
-    // MARK: - Loading Data
+    // MARK: - Loading Data via async/await
     
     /// Loads basic player info using player uid
     /// - Parameter uid: Player's UID

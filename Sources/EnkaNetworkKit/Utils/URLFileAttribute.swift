@@ -15,7 +15,6 @@ struct URLFileAttribute {
 
        if dictionary.keys.contains(FileAttributeKey.size),
            let value = dictionary[FileAttributeKey.size] as? UInt {
-           print("UInt size is \(value)")
            self.fileSize = value
        }
 

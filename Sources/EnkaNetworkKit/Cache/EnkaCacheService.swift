@@ -3,14 +3,17 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/// A service to cache request data.
+/// A simple service to cache request data.
+/// Can store one object of a certain type at a time.
 class EnkaCacheService {
+    
+    // MARK: - Properties
     
     let permanentDirectoryName: String
     
     private(set) var cacheSize: Int = 0
-    
     private lazy var fileManager: FileManager = FileManager()
+    private lazy var temporaryCache: [String: EnkaTemporaryCachedObject] = [:]
     
     private var documentsDirectory: URL {
         let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
@@ -23,19 +26,24 @@ class EnkaCacheService {
         return fileManager.fileExists(atPath: fileUrl.path, isDirectory: &isDirectory)
     }
     
+    // MARK: - Initialization
+    
     init(permanentDirectoryName: String = "EnkaNetworkKit-Cache") {
         self.permanentDirectoryName = permanentDirectoryName
         cacheSize = evaluateCacheSize()
     }
     
+    // MARK: - Working with cache
+    
     func cache(object: EnkaCachable) throws {
         let storageType = type(of: object).storageType
         switch storageType {
         case .permanent(let expirationTime):
+            try saveTemporary(object: object, expirationTime: expirationTime)
             try savePermanent(object: object, expirationTime: expirationTime)
             cacheSize = evaluateCacheSize()
-        case .temporary(_):
-            fatalError("Temporary cache not yet implement")
+        case .temporary(let expirationTime):
+            try saveTemporary(object: object, expirationTime: expirationTime)
         case .none:
             return
         }
@@ -48,6 +56,38 @@ class EnkaCacheService {
         }
     }
     
+    // MARK: - Utils
+    
+    private func saveTemporary(object: EnkaCachable, expirationTime: TimeInterval?) throws {
+        let (_, expirationDate) = try prepareForCaching(object: object, expirationTime: expirationTime)
+        let cachedObject = EnkaTemporaryCachedObject(expirationDate: expirationDate, object: object)
+        temporaryCache["\(type(of: object).fileName).\(type(of: object).fileExtension)"] = cachedObject
+    }
+    
+    private func saveTemporary(object: EnkaCachable, expirationDate: Date) throws {
+        let cachedObject = EnkaTemporaryCachedObject(expirationDate: expirationDate, object: object)
+        temporaryCache["\(type(of: object).fileName).\(type(of: object).fileExtension)"] = cachedObject
+    }
+    
+    internal func loadTemporary<T: EnkaCachable>(object: T.Type) throws -> T {
+        
+        let fullFilename: String = "\(object.fileName).\(object.fileExtension)"
+        
+        guard let cachedObject = temporaryCache[fullFilename] else {
+            throw EnkaCacheError.objectNotInTemporaryCache
+        }
+        
+        if Date() > cachedObject.expirationDate {
+            throw EnkaCacheError.cachedObjectExpired
+        }
+        
+        if let cachedObjectOfType = cachedObject.object as? T {
+            return cachedObjectOfType
+        } else {
+            throw EnkaCacheError.badCachedDataFormat
+        }
+    }
+    
     /// Method that saves EnkaCachable object on disk.
     /// Creates a dedicated directory (if one doesn't exist already) saves the object as JSON String
     /// into a text file with filename and file extension taken from EnkaCachable protocol implementation
@@ -56,18 +96,23 @@ class EnkaCacheService {
     ///   - object: EnkaCacheble object
     ///   - expirationTime: Time after which the cached object will be invalidated
     private func savePermanent(object: EnkaCachable, expirationTime: TimeInterval?) throws {
-        let currentDate: Date = Date()
-        let expirationDate: Date = currentDate.addingTimeInterval(expirationTime ?? EnkaCacheStorageType.defaultPermanentExpirationTime)
-        let jsonData = try object.jsonData
-        guard var jsonString = String(data: jsonData, encoding: .utf8) else {
-            throw EnkaCacheError.unableToConvertCachableObjectToString
-        }
+        var (jsonString, expirationDate) = try prepareForCaching(object: object, expirationTime: expirationTime)
         jsonString.insert(contentsOf: "\(expirationDate.timeIntervalSince1970)\n", at: jsonString.startIndex)
         try setupCacheDirectory()
         try write(string: jsonString, fileName: type(of: object).fileName, fileExtension: type(of: object).fileExtension)
     }
     
-    func loadPermanent<T: EnkaCachable>(object: T.Type) throws -> T {
+    /// Loads EnkaCachable object from disk
+    /// - Parameter object: Type of an object to load
+    /// - Returns: Loaded object
+    internal func loadPermanent<T: EnkaCachable>(object: T.Type) throws -> T {
+        
+        // Trying to load from temporary first
+        if let temporaryCached = try? loadTemporary(object: object) {
+            return temporaryCached
+        }
+        
+        // Not in temporary cache, loading from disk
         let fileName: String = object.fileName
         let fileExtension: String = object.fileExtension
         
@@ -85,14 +130,29 @@ class EnkaCacheService {
             }
             
             if let data = objectJsonString.data(using: .utf8) {
-                return try T.from(jsonData: data)
+                
+                // Saving permanent object to temporary cache for permformance optimization
+                let object = try T.from(jsonData: data)
+                try saveTemporary(object: object, expirationDate: expirationDate)
+                return object
             } else {
                 throw EnkaCacheError.badCachedDataFormat
             }
         } else {
             throw EnkaCacheError.badCachedDataFormat
         }
-
+    }
+    
+    private func prepareForCaching(object: EnkaCachable, expirationTime: TimeInterval?) throws -> (json: String, expirationDate: Date) {
+        let currentDate: Date = Date()
+        let expirationDate: Date = currentDate.addingTimeInterval(expirationTime ?? EnkaCacheStorageType.defaultExpirationTime)
+        let jsonData = try object.jsonData
+        guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+            throw EnkaCacheError.unableToConvertCachableObjectToString
+        }
+        
+        return (json: jsonString, expirationDate: expirationDate)
+        
     }
     
     private func setupCacheDirectory() throws {
