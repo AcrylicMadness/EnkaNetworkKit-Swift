@@ -11,6 +11,7 @@ class EnkaAPIService {
     
     // MARK: - Private Properties
     
+    // TODO: Move some of those properties into config?
     private let enkaUrl: URL = URL(string: "https://enka.network/api/")!
     private let enkaNetworkKitAgent: String = "EnkaNetworkKit-Swift/0.1.0"
     private lazy var session: URLSession = URLSession(configuration: .default)

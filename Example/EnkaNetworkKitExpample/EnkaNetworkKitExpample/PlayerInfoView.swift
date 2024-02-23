@@ -14,7 +14,7 @@ struct PlayerInfoView: View {
     @State var playerData: [PlayerData] = []
     @State var isLoading: Bool = false
         
-    let enkaClient: EnkaClient = EnkaClient(defaultLanguage: .en, userAgent: "EnkaExample/1.0.0")
+    let enkaClient: EnkaClient = EnkaClient(defaultLanguage: .en, userAgent: "EnkaKitExample-iOS/1.0.0")
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
