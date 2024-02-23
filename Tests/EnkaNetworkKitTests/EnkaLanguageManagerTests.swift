@@ -16,6 +16,9 @@ final class EnkaLanguageManagerTests: XCTestCase {
     func testPreferredLanguages() throws {
         XCTAssertEqual(languageManager.closestTo(languages: ["en_US", "ru_RU"]), .en)
         XCTAssertEqual(languageManager.closestTo(languages: ["not_a_language", "ko_KR"]), .ko)
+        XCTAssertEqual(languageManager.closestTo(languages: ["zh_Hans_CN"]), .zhCn)
+        XCTAssertEqual(languageManager.closestTo(languages: ["zh_Hant_SG"]), .zhCn)
+        XCTAssertEqual(languageManager.closestTo(languages: ["zh_Hant_TW"]), .zhTw)
         XCTAssertEqual(languageManager.closestTo(languages: []), languageManager.defaultLanguage)
         XCTAssertEqual(languageManager.closestTo(languages: ["not_a_language", "also_not_a_language"]), languageManager.defaultLanguage)
     }

@@ -16,7 +16,14 @@ struct EnkaLanguageManager {
         
         let prefix = language.prefix(2)
         
-        // TODO: Add extra logic to handle zh-TW and zh-CN separately
+        if String(prefix) == "zh" {
+            if language.uppercased().contains("TW") {
+                return .zhTw
+            } else {
+                return .zhCn
+            }
+        }
+        
         if let enkaLanguage = EnkaLanguage(rawValue: String(prefix)) {
             return enkaLanguage
         } else {

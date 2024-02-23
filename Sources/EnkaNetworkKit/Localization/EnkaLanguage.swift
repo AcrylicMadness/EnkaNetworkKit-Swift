@@ -19,9 +19,11 @@ public enum EnkaLanguage: String {
     /// 한국어
     case ko
     /// 日本語
-    case jp
+    case ja
     /// 中文
-    case zh
+    case zhCn
+    /// 國語
+    case zhTw
     /// Indonesian
     case id
     /// français
@@ -30,10 +32,6 @@ public enum EnkaLanguage: String {
     case es
     /// deutsch
     case de
-    /// Taiwan
-    case cht
-    /// Chinese
-    case chs
 }
 
 // MARK: - Identifiable
