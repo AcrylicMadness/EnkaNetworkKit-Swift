@@ -80,10 +80,15 @@ struct PlayerInfoView: View {
                         isLoading = false
                         playerData.append(PlayerData(key: "Nickname", value: playerInfo.nickname))
                         playerData.append(PlayerData(key: "Signature", value: playerInfo.signature))
-                        playerData.append(PlayerData(key: "Adventure Rank", value: "\(playerInfo.level)"))
+                        playerData.append(PlayerData(key: "Adventure Rank", value: "\(playerInfo.adventurRank)"))
                         playerData.append(PlayerData(key: "World level", value: "\(playerInfo.worldLevel)"))
                         playerData.append(PlayerData(key: "Completed achievments", value: "\(playerInfo.finishAchievementNum)"))
-                        playerData.append(PlayerData(key: "Abyss", value: "\(playerInfo.towerFloorIndex)-\(playerInfo.towerLevelIndex)"))
+                        playerData.append(PlayerData(key: "Abyss", value: "\(playerInfo.abyssFloor)-\(playerInfo.abyssRoom)"))
+                    
+                    for character in playerInfo.characterList {
+                        playerData.append(PlayerData(key: character.name, value: "Level: \(character.level)"))
+                    }
+                    
                 }
             } catch {
                 print(error)

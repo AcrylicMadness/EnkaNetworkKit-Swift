@@ -5,7 +5,11 @@ public final class EnkaClient {
     // MARK: - Public Properies
     
     /// Language of the EnkaClient
-    public let language: EnkaLanguage
+    public var language: EnkaLanguage {
+        didSet {
+            self.service.language = language
+        }
+    }
     
     /// User Agent string. Should include application name and version,
     /// for example "Enka-App/1.2.3". If nil, the default agent for EnkaNetworkKit will be used instead
@@ -34,6 +38,7 @@ public final class EnkaClient {
         let languageManager = EnkaLanguageManager(defaultLanguage: defaultLanguage)
         self.language = languageManager.closestTo(languages: Locale.preferredLanguages)
         self.userAgent = userAgent
+        self.service.language = self.language
     }
     
     /// Creates an instance of EnkaClient that ignores OS language settings and uses the provided language instead
@@ -42,6 +47,7 @@ public final class EnkaClient {
     public init(fixedLanguage language: EnkaLanguage, userAgent: String? = nil) {
         self.language = language
         self.userAgent = userAgent
+        self.service.language = self.language
     }
     
     // MARK: - Working With Cache

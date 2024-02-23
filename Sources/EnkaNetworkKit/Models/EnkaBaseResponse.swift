@@ -1,5 +1,5 @@
 import Foundation
 
 struct EnkaBaseResponse: Codable {
-    let playerInfo: EnkaPlayerInfo
+    let playerInfo: EnkaPlayerInfoUnlocalized
 }

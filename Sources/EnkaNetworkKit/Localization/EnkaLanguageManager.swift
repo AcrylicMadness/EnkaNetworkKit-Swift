@@ -10,21 +10,17 @@ struct EnkaLanguageManager {
     // MARK: - Methods
     
     /// Returns EnkaLanguage from provided languiage descriptor
-    /// - Parameter language: Language descriptor in the format of 'en_US' or 'en'
+    /// - Parameter language: Language descriptor in the format of 'en_US', 'en-US' or 'en'
     /// - Returns: Corresponding EnkaLanguage or nil if not found
     func enkaLanguage(fromLanguage language: String) -> EnkaLanguage? {
-        if let languageShort = language.split(separator: "_").first {
-            if let enkaLanguage = EnkaLanguage(rawValue: String(languageShort)) {
-                return enkaLanguage
-            } else {
-                return nil
-            }
+        
+        let prefix = language.prefix(2)
+        
+        // TODO: Add extra logic to handle zh-TW and zh-CN separately
+        if let enkaLanguage = EnkaLanguage(rawValue: String(prefix)) {
+            return enkaLanguage
         } else {
-            if let enkaLanguage = EnkaLanguage(rawValue: language) {
-                return enkaLanguage
-            } else {
-                return nil
-            }
+            return nil
         }
     }
     
