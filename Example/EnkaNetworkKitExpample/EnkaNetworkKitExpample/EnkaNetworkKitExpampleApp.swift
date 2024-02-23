@@ -2,7 +2,7 @@
 //  EnkaNetworkKitExpampleApp.swift
 //  EnkaNetworkKitExpample
 //
-//  Created by Кирилл Аверкиев on 04.05.2023.
+//  Created by Acrylic M. on 04.05.2023.
 //
 
 import SwiftUI

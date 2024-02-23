@@ -2,7 +2,7 @@
 //  PlayerInfoView.swift
 //  EnkaNetworkKitExpample
 //
-//  Created by Кирилл Аверкиев on 04.05.2023.
+//  Created by Acrylic M. on 04.05.2023.
 //
 
 import EnkaNetworkKit
@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PlayerInfoView: View {
     
-    @State var uid: String = "618285856"
+    @State var uid: String = "720522638"
     @State var playerData: [PlayerData] = []
     @State var isLoading: Bool = false
         
