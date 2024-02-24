@@ -2,8 +2,6 @@ import Foundation
 
 // MARK: - EnkaLanguage
 
-// TODO: Add zh-TW and zh-CN support
-
 /// Languages that are supported by EnkaNetwork
 public enum EnkaLanguage: String {
     /// English

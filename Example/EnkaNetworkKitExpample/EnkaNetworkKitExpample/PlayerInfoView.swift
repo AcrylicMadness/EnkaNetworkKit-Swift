@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PlayerInfoView: View {
     
+    // I rarely play Genshin these days but feel free to add me
     @State var uid: String = "720522638"
     @State var playerData: [PlayerData] = []
     @State var isLoading: Bool = false
